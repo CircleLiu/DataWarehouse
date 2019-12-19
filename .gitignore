@@ -126,3 +126,5 @@ dmypy.json
 csv/
 rawdata/
 movies.txt
+
+.vscode/
