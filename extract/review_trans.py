@@ -6,8 +6,8 @@ number_of_reviews = 7911684
 with open('./rawdata/movies.txt', 'r', errors='ignore') as datafile:
     block = [''] * 9
     
-    with open('./csv/all_review.csv', 'w') as csvfile:
-        writer = csv.writer(csvfile)
+    with open('./csv/all_review_new.csv', 'w') as csvfile:
+        writer = csv.writer(csvfile, delimiter='|', quoting=csv.QUOTE_MINIMAL, doublequote=False, escapechar='\\')
 
         for n in tqdm(range(number_of_reviews)):
             for i in range(9):
@@ -19,6 +19,7 @@ with open('./rawdata/movies.txt', 'r', errors='ignore') as datafile:
 
             try:
                 row = [j.split(':', 1)[1].strip() for j in block[:8]]
+                row[0] = row[0].rjust(10, '0')
                 writer.writerow(row)
             except:
                 print(block)
