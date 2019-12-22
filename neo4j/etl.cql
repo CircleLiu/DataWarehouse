@@ -115,3 +115,13 @@ on create set h.product_id = line[0], h.publication_date_id = d.date_id
 match (a:actor)
 match p = (d1:actor)-[:have_actor]-(m:movie)-[:have_actor]-(d2:actor) where d1.actor_name = a.actor_name and d2.actor_name <> a.actor_name 
 return d1.actor_name,d2.actor_name,count(p) order by count(p) desc
+
+USING PERIODIC COMMIT 1000
+LOAD CSV FROM "file:///rating.csv" AS line
+MATCH (p:product) where p.product_id = line[0]
+SET p.rating = line[2]
+
+
+
+MATCH (p:product)-[r:have_publication_date]-()
+SET p.publication_date_id = r.publication_date_id
