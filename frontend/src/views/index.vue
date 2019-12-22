@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
 <el-container>
         <el-header>
@@ -21,8 +22,8 @@
         <div class="Add condition">
             <h3>ADDED CONDITION</h3>
             <el-row>
-              <el-button icon="el-icon-search" circle></el-button>
-               <el-button icon="el-icon-refresh-right" circle></el-button>
+              <el-button icon="el-icon-search" @click="search" circle></el-button>
+               <el-button icon="el-icon-refresh-right" @click="cleartable" circle></el-button>
             </el-row>
             <el-table
             :data="tableData"
@@ -177,6 +178,9 @@
           label0: 'OR'
         }],
         options1: [{
+          value1: 'ProductID',
+          label1: 'Product ID'
+        },{
           value1: 'Movie',
           label1: 'Movie'
         },{
@@ -253,6 +257,17 @@
          condition: this.value2,
          value: this.input
        })
+     },
+     search() {
+       this.$axios({
+         method: 'POST',
+         url: 'http://127.0.0.1:5000/getproduct',
+         data: this.tableData,
+         timeout: 60000
+       })
+       .then(function (response) {
+          console.log(response)
+        })
      }
   }
   };
