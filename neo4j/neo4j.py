@@ -98,7 +98,6 @@ def search_amount_of_release_date(field, condition, value):
     return g
 
 
-
 def search_amount(field, condition, value):
     for i in range(len(field)):
         field[i] = map[field[i]]
@@ -126,7 +125,6 @@ def search_amount(field, condition, value):
     return g
 
 
-
 def collaboration_of_actor(amount):
     s = "match p = (d1:actor)-[:have_actor]-(m:movie)-[:have_actor]-(d2:actor) where d2.actor_name <> d1.actor_name " \
         "return d1.actor_name,d2.actor_name,count(p) order by count(p) desc limit " + amount
@@ -134,11 +132,56 @@ def collaboration_of_actor(amount):
     return g
 
 
-def collaboration_of_director_and_actor(amount):
-    s = "match p = (d1:actor)-[:have_actor]-(m:movie)-[:have_director]-(d2:director) where d2.director_name <> " \
-        "d1.actor_name return d1.actor_name, d2.director_name,count(p) order by count(p) desc limit " + amount
+def collaboration_of_director(amount):
+    s = "match p = (d1:director)-[:have_director]-(m:movie)-[:have_director]-(d2:director) where d2.director_name <> " \
+        "d1.director_name " \
+        "return d1.director_name,d2.director_name,count(p) order by count(p) desc limit " + amount
     g = graph.run(s).data()
     return g
+
+
+def collaboration_of_director_and_actor(amount):
+    s = "match p = (d1:actor)-[:have_actor]-(m:movie)-[:have_director]-(d2:director) where d2.director_name <> " \
+        "d1.actor_name return d1.actor_name, d2.director_name, count(p) order by count(p) desc limit " + amount
+    g = graph.run(s).data()
+    return g
+
+
+def actor_with_actor(actor_name):
+    s = "match p = (d1:actor)-[:have_actor]-(m:movie)-[:have_actor]-(d2:actor) where d2.actor_name <> " \
+        "d1.actor_name and d1.actor_name = \"" + actor_name + \
+        "\" return d2.actor_name, count(p) order by count(p) desc "
+    print(s)
+    g = graph.run(s).data()
+    return g
+
+
+def actor_with_director(actor_name):
+    s = "match p = (d1:actor)-[:have_actor]-(m:movie)-[:have_director]-(d2:director) where d2.director_name <> " \
+        "d1.actor_name and d1.actor_name = \"" + actor_name + \
+        "\" return d2.director_name, count(p) order by count(p) desc "
+    print(s)
+    g = graph.run(s).data()
+    return g
+
+
+def director_with_director(director_name):
+    s = "match p = (d1:director)-[:have_director]-(m:movie)-[:have_director]-(d2:director) where d2.director_name <> " \
+        "d1.director_name and d1.director_name = \"" + director_name + \
+        "\" return d2.director_name, count(p) order by count(p) desc "
+    print(s)
+    g = graph.run(s).data()
+    return g
+
+
+def director_with_actor(director_name):
+    s = "match p = (d1:director)-[:have_director]-(m:movie)-[:have_actor]-(d2:actor) where d2.actor_name <> " \
+        "d1.director_name and d1.director_name = \"" + director_name + \
+        "\" return d2.actor_name, count(p) order by count(p) desc "
+    print(s)
+    g = graph.run(s).data()
+    return g
+
 
 def movie_of_genre(field, condition, value):
     for i in range(len(field)):
@@ -157,6 +200,7 @@ def movie_of_genre(field, condition, value):
 
     g = graph.run(s).data()
     return g
+
 
 matcher = NodeMatcher(graph)
 
@@ -185,4 +229,8 @@ new_nodes = list(nodes)
 # print(search_amount_of_release_date(["ReleaseWeekday", "ReleaseWeekday"], [">", "<="], ["2", "3"]))
 # print(collaboration_of_actor("10"))
 # print(collaboration_of_actor("20"))
-print(movie_of_genre(["Genre"], ["="], ["Action"]))
+# print(movie_of_genre(["Genre"], ["="], ["Action"]))
+# print(actor_with_actor("John Wayne"))
+# print(actor_with_director("John Wayne"))
+# print(director_with_director("Robert Smigel"))
+# print(director_with_actor("Robert Smigel"))
