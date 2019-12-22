@@ -10,7 +10,7 @@
             text-color="#fff"
             active-text-color="#ffd04b">
           
-            <el-menu-item index="/homeindex" @click="onclick0">AMAZON DATA</el-menu-item>
+            <el-menu-item index="/" @click="onclick0">AMAZON DATA</el-menu-item>
             <el-menu-item index="/graphdata" @click="onclick1">GRAPH COMPUTATION</el-menu-item>
             </el-menu>
         </el-header>
@@ -257,7 +257,7 @@
 
     methods: {
     onclick0() {
-      this.$router.push({ path: "/homeindex" });
+      this.$router.push({ path: "/" });
     },
      onclick1() {
       this.$router.push({ path: "/graphdata" });
