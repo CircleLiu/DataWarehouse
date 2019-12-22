@@ -128,3 +128,5 @@ rawdata/
 movies.txt
 
 .vscode/
+
+.DS_Store
