@@ -92,7 +92,7 @@
               </el-select>
            </el-col>
            <el-col :span=5>
-            <el-select v-model="value2" placeholder="!=">
+            <el-select v-model="value2" placeholder="=">
                 <el-option
                 v-for="item in options2"
                 :key="item.value2"
@@ -114,17 +114,19 @@
         <el-card class="box-card">
         <div class="text item">
             <h3>RESULT</h3>
+            <h4>Total: {{total_num}} items</h4>
+            <h4>Running Time: {{timeuse}} ms</h4>
             <el-table
             :data="infiledList"
             stripe
             style="width: 100%">
             <el-table-column
-            prop="product_id"
+            prop="asin"
             label="PRODUCT ID"
             >
             </el-table-column>
             <el-table-column
-            prop="title"
+            prop="name"
             label="TITLE">
             </el-table-column>
             <el-table-column
@@ -132,15 +134,15 @@
             label="PRICE">
             </el-table-column>
             <el-table-column
-            prop="time"
+            prop="running_time"
             label="TIME">
             </el-table-column>
           <el-table-column
-            prop="sales_rank"
+            prop="rank"
             label="SALES RANK">
             </el-table-column>
             <el-table-column
-            prop="publication date"
+            prop="publication_date"
             label="PUBLICATION DATE	">
             </el-table-column>
          
@@ -148,14 +150,7 @@
             prop="release_date"
             label="RELEASE DATE">
             </el-table-column>
-              <el-table-column
-            prop="version_count"
-            label="VERSION COUNT">
-            </el-table-column>
-               <el-table-column
-            prop="binding"
-            label="BINDING">
-            </el-table-column>
+
             </el-table>
         </div>
         </el-card>
@@ -178,47 +173,47 @@
           label0: 'OR'
         }],
         options1: [{
-          value1: 'ProductID',
+          value1: 'asin',
           label1: 'Product ID'
         },{
-          value1: 'Movie',
+          value1: 'name',
           label1: 'Movie'
         },{
-          value1: 'Actor',
+          value1: 'actor',
           label1: 'Actor'
         },{
-          value1: 'Author',
+          value1: 'director',
+          label1: 'Director'
+        },{
+          value1: 'author',
           label1: 'Author'
         },{
-          value1: 'Language',
+          value1: 'language',
           label1: 'Language'
         },{
-          value1: 'Binding',
-          label1: 'Binding'
+          value1: 'media',
+          label1: 'Media'
         },{
-          value1: 'Genre',
+          value1: 'genre',
           label1: 'Genre'
         },{
-          value1: 'Studio',
+          value1: 'studio',
           label1: 'Studio'
         },{
-          value1: 'ReleaseDate',
+          value1: 'release_date',
           label1: 'Release Date'
         },{
-          value1: 'Price',
+          value1: 'price',
           label1: 'Price'
         },{
-          value1: 'RunningTime',
+          value1: 'running_time',
           label1: 'Running Time'
         },{
-          value1: 'SalesRank',
+          value1: 'rank',
           label1: 'Sales Rank'
         },{
           value1: 'VersionCount',
           label1: 'Version Count'
-        },{
-          value1: 'Director',
-          label1: 'Director'
         },],
         options2: [{
           value2: '!=',
@@ -227,7 +222,20 @@
           value2: '=',
           label2: '='
         }, {
-          value3: '>'
+          value2: '>',
+          label2: '>'
+        }, {
+          value2: '<',
+          label2: '<'
+        }, {
+          value2: '>=',
+          label2: '>='
+        }, {
+          value2: '<=',
+          label2: '<='
+        }, {
+          value2: 'like',
+          label2: 'like'
         }],
           navList:[
             {name:'/homeindex',navItem:'发现项目'},
@@ -237,7 +245,10 @@
         value1: '',
         value2: '',
         input: '',
-        tableData: []
+        total_num: 0,
+        timeuse: 0,
+        tableData: [],
+        infiledList: [],
       }
     },
     methods: {
@@ -259,14 +270,17 @@
        })
      },
      search() {
+       var start = Date.now()
        this.$axios({
          method: 'POST',
          url: 'http://127.0.0.1:5000/getproduct',
          data: this.tableData,
          timeout: 60000
        })
-       .then(function (response) {
-          console.log(response)
+       .then((response) => {
+          this.timeuse = Date.now() - start
+          this.total_num = response.data.length
+          this.infiledList = response.data
         })
      }
   }

@@ -1,14 +1,14 @@
 from flask import Flask
 from flask import request, jsonify
 import dao.neo as neo
+import dao.hive as hive
 
 app = Flask(__name__)
 
 @app.route('/getproduct', methods=['POST'])
 def getproduct():
-    print(request.json)
-
-    return jsonify({'status': 'OK'})
+    res = hive.condition_search(request.json)
+    return jsonify(res)
 
 
 @app.route('/actor_with_actor', methods=['POST'])

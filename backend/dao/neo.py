@@ -4,7 +4,7 @@ import re
 import time
 from py2neo import Graph, Node, Relationship, NodeMatcher
 
-graph = Graph("http://192.168.50.53:7474", auth=("neo4j", "12345"))
+graph = Graph("http://180.160.39.41:7474", auth=("neo4j", "12345"))
 
 map = {
     "Product": "product.product_id",
@@ -199,3 +199,17 @@ def movie_of_genre(field, condition, value):
 
     g = graph.run(s).data()
     return g
+
+
+def count():
+    s = "match (m:movie)"+ " return count(m)"
+    print(s)
+    g = graph.run(s).data()
+    return g
+
+from time import time
+
+start = time()
+print(count())
+end = time()
+print(end-start, 'ms')
